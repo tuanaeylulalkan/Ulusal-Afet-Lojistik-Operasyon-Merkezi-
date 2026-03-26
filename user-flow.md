@@ -5,7 +5,7 @@ Bu belge, kullanıcının sistem içerisindeki etkileşimlerini ve sistemin bu e
 
 
 ##  Akış Diyagramı
-
+```
 Şehir Seçimi
    ↓
 Hibrit Veri Toplama
@@ -25,7 +25,7 @@ Dinamik Müdahale (Enkaz / Hava)
 AI Optimizasyonu
    ↓
 Operasyon Tamamlanır
-
+```
 
 
 ##  Adım Adım Kullanıcı Deneyimi
