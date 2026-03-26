@@ -587,25 +587,35 @@ function bindSync() {
  * Sonuç 3-15 arasında kısıtlanır.
  */
 function calculateRequiredTrucks() {
-    // Faktör 1: Açık kenar (yol) sayısı → daha fazla açık yol = daha fazla tır gerekli
+    // Faktör 1: Açık yol ve mesafe dinamikleri
     const openEdgeCount = C_EDGES.filter(e => {
         const ek1 = `${e.from}-${e.to}`, ek2 = `${e.to}-${e.from}`;
         return !closedEdges.has(ek1) && !closedEdges.has(ek2)
             && !closedNodes.has(e.from) && !closedNodes.has(e.to);
     }).length;
-    const routeBonus = Math.round(openEdgeCount * 1.2); // max ~10 for 8 open edges
-
-    // Faktör 2: BFS ile ana rotanın uzunluğu (hops)
+    
     const mainPath = bfsPath('n1', 'n6', 'supply');
     const hopCount = mainPath ? mainPath.length - 1 : 3;
-    const distanceBonus = Math.min(hopCount * 2, 6); // max 6
+    
+    // Karmaşıklık skoru (0-10 arası normalize edelim)
+    const complexity = Math.floor((openEdgeCount * 0.5) + (hopCount * 1.5));
 
-    // Faktör 3: Vakanın öncelik derecesi (aciliyeti)
+    // Faktör 2: Vakanın öncelik derecesi (Kullanıcı talebi: V15)
     const tier = (window.selectedCaseObj || {}).priorityTier || 'medium';
-    const urgencyBonus = tier === 'critical' ? 6 : tier === 'low' ? 0 : 3;
 
-    const total = routeBonus + distanceBonus + urgencyBonus;
-    return Math.max(3, Math.min(15, total));
+    if (tier === 'low') return 3; // Düşük: Sabit 3
+    
+    if (tier === 'medium') {
+        // Orta: 4-9 arası
+        return Math.min(9, 4 + Math.floor(complexity / 2));
+    }
+    
+    if (tier === 'critical') {
+        // Kritik: 10-16 arası
+        return Math.min(16, 10 + Math.floor(complexity / 1.5));
+    }
+
+    return 6; // Varsayılan
 }
 
 function updateSimUI() {
