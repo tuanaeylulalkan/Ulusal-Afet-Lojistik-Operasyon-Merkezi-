@@ -718,17 +718,17 @@ function bindSimControls() {
                        <p class="mt-3 text-xs text-slate-400 border-t border-blue-500/20 pt-3">Simülasyon motoru, seçili vakadan gelen canlı beslemeler (yol durumu, mesh sensörleri ve tır GPS verileri) üzerinden anlık rapor üretmektedir.</p>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-slate-800/60 p-5 border border-slate-700/50 rounded-xl relative overflow-hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sticky top-0 z-10 bg-slate-900/90 backdrop-blur-md pb-6 pt-2 -mx-2 px-2 border-b border-slate-700/30 mb-2">
+                        <div class="bg-slate-800/60 p-5 border border-slate-700/50 rounded-xl relative overflow-hidden shadow-lg">
                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-${aiColor}-500/10 rounded-full blur-xl"></div>
                            <p class="font-bold text-slate-400 mb-3 text-[11px] uppercase tracking-wider flex items-center gap-2">🚥 Trafik Yoğunluk Analizi</p>
                            ${trafficHtml}
                         </div>
-                        <div class="bg-slate-800/60 p-5 border border-slate-700/50 rounded-xl relative overflow-hidden">
+                        <div class="bg-slate-800/60 p-5 border border-slate-700/50 rounded-xl relative overflow-hidden shadow-lg">
                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-500/10 rounded-full blur-xl"></div>
                            <p class="font-bold text-slate-400 mb-3 text-[11px] uppercase tracking-wider flex items-center gap-2">🚛 Kurtarma Kapasitesi</p>
                            <p class="text-white text-xl font-bold" id="report-truck-text">-- Tır Yolda</p>
-                           <p class="text-slate-400 mt-2 text-xs">Toplam kapasitenin %100'ü sahaya yönlendirildi. Sevkiyat merkezinde yedek araç bekletilmektedir.</p>
+                           <p class="text-slate-400 mt-2 text-xs">Toplam kapasitenin %100'ü sahaya yönlendirildi.</p>
                         </div>
                     </div>
                     
