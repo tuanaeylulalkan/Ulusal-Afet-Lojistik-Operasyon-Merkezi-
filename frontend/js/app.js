@@ -708,17 +708,8 @@ function bindSimControls() {
                     <h2 class="text-xl font-black text-white flex items-center gap-3 tracking-widest uppercase"><span class="text-blue-400 text-2xl">✨</span> STRATEJİK ANALİZ RAPORU</h2>
                     <button id="close-report-modal" class="text-slate-400 hover:text-white text-3xl leading-none transition-colors drop-shadow-md">&times;</button>
                 </div>
-                <div class="p-6 overflow-y-auto custom-scrollbar text-slate-300 text-sm space-y-6">
-                    <div class="bg-blue-900/10 border border-blue-500/20 p-5 rounded-xl shadow-inner">
-                       <div class="flex items-center justify-between mb-3">
-                           <p class="font-bold text-blue-400 uppercase tracking-wide text-xs">Durum Özeti</p>
-                           <span class="bg-${aiColor}-500/20 text-${aiColor}-400 text-[10px] font-bold px-3 py-1 rounded-full border border-${aiColor}-500/30">${aiStatusText}</span>
-                       </div>
-                       <p id="report-summary-text" class="text-base text-slate-200 leading-relaxed">Gemini AI tarafından hesaplanan güncel kriz senaryosu verileri.</p>
-                       <p class="mt-3 text-xs text-slate-400 border-t border-blue-500/20 pt-3">Simülasyon motoru, seçili vakadan gelen canlı beslemeler (yol durumu, mesh sensörleri ve tır GPS verileri) üzerinden anlık rapor üretmektedir.</p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sticky top-0 z-10 bg-slate-900/90 backdrop-blur-md pb-6 pt-2 -mx-2 px-2 border-b border-slate-700/30 mb-2">
+                <div class="px-6 py-4 bg-slate-900 border-b border-slate-800">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-800/60 p-5 border border-slate-700/50 rounded-xl relative overflow-hidden shadow-lg">
                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-${aiColor}-500/10 rounded-full blur-xl"></div>
                            <p class="font-bold text-slate-400 mb-3 text-[11px] uppercase tracking-wider flex items-center gap-2">🚥 Trafik Yoğunluk Analizi</p>
@@ -728,8 +719,18 @@ function bindSimControls() {
                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-500/10 rounded-full blur-xl"></div>
                            <p class="font-bold text-slate-400 mb-3 text-[11px] uppercase tracking-wider flex items-center gap-2">🚛 Kurtarma Kapasitesi</p>
                            <p class="text-white text-xl font-bold" id="report-truck-text">-- Tır Yolda</p>
-                           <p class="text-slate-400 mt-2 text-xs">Toplam kapasitenin %100'ü sahaya yönlendirildi.</p>
+                           <p class="text-slate-400 mt-2 text-xs">Sahadaki aktif operasyonel güç.</p>
                         </div>
+                    </div>
+                </div>
+                <div class="p-6 overflow-y-auto custom-scrollbar text-slate-300 text-sm space-y-6 flex-1">
+                    <div class="bg-blue-900/10 border border-blue-500/20 p-5 rounded-xl shadow-inner">
+                       <div class="flex items-center justify-between mb-3">
+                           <p class="font-bold text-blue-400 uppercase tracking-wide text-xs">Durum Özeti</p>
+                           <span class="bg-${aiColor}-500/20 text-${aiColor}-400 text-[10px] font-bold px-3 py-1 rounded-full border border-${aiColor}-500/30">${aiStatusText}</span>
+                       </div>
+                       <p id="report-summary-text" class="text-base text-slate-200 leading-relaxed">Gemini AI tarafından hesaplanan güncel kriz senaryosu verileri.</p>
+                       <p class="mt-3 text-xs text-slate-400 border-t border-blue-500/20 pt-3">Simülasyon motoru, seçili vakadan gelen canlı beslemeler üzerinden anlık rapor üretmektedir.</p>
                     </div>
                     
                     <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/30">
