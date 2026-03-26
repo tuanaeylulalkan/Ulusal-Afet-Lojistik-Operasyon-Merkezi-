@@ -1314,7 +1314,7 @@ function initChart() {
 
             const hasActiveTrucks = trucks.some(t => t.vtype === 'supply' && !t.reached && !t.toBeRemoved);
             if (window.isAIOptimized && hasActiveTrucks) {
-                savedTimeSecs += 25;
+                savedTimeSecs += 55; // V14: Hızlandırıldı (25 -> 55)
                 let hrs = Math.floor(savedTimeSecs / 3600);
                 let mins = Math.floor((savedTimeSecs % 3600) / 60);
                 let secs = savedTimeSecs % 60;
