@@ -704,39 +704,36 @@ function bindSimControls() {
 
         modal.innerHTML = `
             <div class="bg-slate-900 border border-slate-700/50 rounded-2xl w-[90%] sm:w-full max-w-3xl max-h-[90vh] flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden relative border-t-4 border-t-${aiColor}-500 transform transition-all scale-100 opacity-100">
-                <div class="bg-slate-800/95 border-b border-slate-700 backdrop-blur-md flex-shrink-0 z-20 shadow-xl">
+                <div class="bg-slate-800 border-b border-slate-700 flex-shrink-0 z-20 shadow-2xl">
                     <div class="px-6 py-5 flex justify-between items-center border-b border-slate-700/50">
                         <h2 class="text-xl font-black text-white flex items-center gap-3 tracking-widest uppercase"><span class="text-blue-400 text-2xl">✨</span> STRATEJİK ANALİZ RAPORU</h2>
-                        <button id="close-report-modal" class="text-slate-400 hover:text-white text-3xl leading-none transition-colors drop-shadow-md">&times;</button>
+                        <button id="close-report-modal" class="text-slate-400 hover:text-white text-3xl leading-none transition-colors border-none bg-transparent cursor-pointer">&times;</button>
                     </div>
-                    <div class="px-6 py-4 bg-slate-900/40">
+                    <div class="px-6 py-4 bg-slate-900">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-slate-800 p-4 border border-slate-700 rounded-xl relative overflow-hidden shadow-inner">
-                               <div class="absolute -right-4 -top-4 w-16 h-16 bg-${aiColor}-500/10 rounded-full blur-xl"></div>
-                               <p class="font-bold text-slate-400 mb-2 text-[10px] uppercase tracking-wider flex items-center gap-2">🚥 Trafik Analizi</p>
+                            <div class="bg-slate-800 p-4 border border-slate-700 rounded-xl relative overflow-hidden">
+                               <p class="font-bold text-slate-500 mb-2 text-[10px] uppercase tracking-wider">🚥 Trafik Analizi</p>
                                ${trafficHtml}
                             </div>
-                            <div class="bg-slate-800 p-4 border border-slate-700 rounded-xl relative overflow-hidden shadow-inner">
-                               <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-500/10 rounded-full blur-xl"></div>
-                               <p class="font-bold text-slate-400 mb-2 text-[10px] uppercase tracking-wider flex items-center gap-2">🚛 Kurtarma Kapasitesi</p>
+                            <div class="bg-slate-800 p-4 border border-slate-700 rounded-xl relative overflow-hidden">
+                               <p class="font-bold text-slate-500 mb-2 text-[10px] uppercase tracking-wider">🚛 Kurtarma Kapasitesi</p>
                                <p class="text-white text-lg font-bold" id="report-truck-text">-- Tır Yolda</p>
                                <p class="text-slate-500 mt-1 text-[11px]">Aktif operasyonel güç.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="p-6 overflow-y-auto custom-scrollbar text-slate-300 text-sm space-y-6 flex-1 bg-slate-900/50">
-                    <div class="bg-blue-900/10 border border-blue-500/20 p-5 rounded-xl shadow-inner">
+                <div class="p-6 overflow-y-auto custom-scrollbar text-slate-300 text-sm space-y-6 flex-1 bg-slate-900">
+                    <div class="bg-blue-900/20 border border-blue-500/30 p-5 rounded-xl">
                        <div class="flex items-center justify-between mb-3">
                            <p class="font-bold text-blue-400 uppercase tracking-wide text-xs">Durum Özeti</p>
-                           <span class="bg-${aiColor}-500/20 text-${aiColor}-400 text-[10px] font-bold px-3 py-1 rounded-full border border-${aiColor}-500/30">${aiStatusText}</span>
+                           <span class="bg-${aiColor}-500/30 text-${aiColor}-300 text-[10px] font-bold px-3 py-1 rounded-full border border-${aiColor}-500/40">${aiStatusText}</span>
                        </div>
-                       <p id="report-summary-text" class="text-base text-slate-200 leading-relaxed">Gemini AI tarafından hesaplanan güncel kriz senaryosu verileri.</p>
-                       <p class="mt-3 text-xs text-slate-400 border-t border-blue-500/20 pt-3">Simülasyon motoru, seçili vakadan gelen canlı beslemeler üzerinden anlık rapor üretmektedir.</p>
+                       <p id="report-summary-text" class="text-base text-slate-200 leading-relaxed font-medium">Gemini AI tarafından hesaplanan güncel kriz senaryosu verileri.</p>
                     </div>
                     
-                    <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/30">
-                       <p class="font-bold text-slate-200 text-base mb-4 flex items-center gap-2">🧠 AI Optimizasyon Tavsiyeleri</p>
+                    <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                       <p class="font-bold text-cyan-400 text-base mb-4 flex items-center gap-2">🧠 AI Optimizasyon Tavsiyeleri</p>
                        <ul class="list-disc pl-5 space-y-3 text-slate-300 text-sm leading-relaxed">
                            ${adviceHtml}
                        </ul>
