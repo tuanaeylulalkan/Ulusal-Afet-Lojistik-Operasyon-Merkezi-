@@ -682,7 +682,7 @@ function bindSimControls() {
 
         modal = document.createElement('div');
         modal.id = 'ai-report-modal';
-        modal.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden';
+        modal.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-black/90 overflow-y-auto py-10 custom-scrollbar';
 
         const isAI = window.isAIOptimized;
         const aiColor = isAI ? 'emerald' : 'red';
@@ -690,51 +690,48 @@ function bindSimControls() {
 
         const trafficHtml = isAI
             ? `<p class="text-white text-xl font-bold">%35 Akıcı <span class="text-emerald-500 text-sm ml-2 font-normal">▼ Gecikme yok</span></p>
-               <p class="text-slate-400 mt-2 text-xs">Konvoy tamamen yeşil tali yollara ve çevre yollarına yönlendirildi. Ana arterlerdeki kilitlenme başarılı bir şekilde bypass ediliyor.</p>`
+               <p class="text-slate-400 mt-2 text-xs">Konvoy tamamen yeşil yollara yönlendirildi.</p>`
             : `<p class="text-white text-xl font-bold">%120 Darboğaz <span class="text-red-500 text-sm ml-2 font-normal">▲ 45 dk gecikme</span></p>
-               <p class="text-slate-400 mt-2 text-xs">Tüm yük ana artere binmiş durumda. Alternatif rotalar kullanılmadığı için konvoyun ilerleme hızı kritik seviyede yavaşladı.</p>`;
+               <p class="text-slate-400 mt-2 text-xs">Tüm yük ana artere binmiş durumda.</p>`;
 
         const adviceHtml = isAI
-            ? `<li>Saha ekiplerinin alternatif güzergahlarda (Güney Servis Hattı, Çevre Yolu) aldığı önlemler sonuç verdi. Tırlar 3'lü kafileler halinde hedefe ilerliyor.</li>
+            ? `<li>Saha ekiplerinin alternatif güzergahlarda aldığı önlemler sonuç verdi.</li>
                <li>Tahmini varış süresi (ETA) başlangıç planına göre <strong>Kısaldı</strong>.</li>
-               <li class="text-emerald-400 font-bold bg-emerald-900/30 p-3 rounded border border-emerald-500/20 mt-2 inline-block">Mevcut hız korunduğu takdirde kazanılan toplam süre: 2 Saat 15 Dakika.</li>`
+               <li class="text-emerald-400 font-bold mt-2 inline-block text-lg">Toplam süre kazancı: 2 Saat 15 Dakika.</li>`
             : `<li>Ana yollardaki kilitlenmeyi aşmak için sevkiyatın tali yollara kaydırılması ŞİDDETLE tavsiye edilmektedir.</li>
                <li>Bekleme süresi her geçen dakika katlanarak artmaktadır.</li>
-               <li class="text-red-400 font-bold bg-red-900/30 p-3 rounded border border-red-500/20 mt-2 inline-block">AI Optimizasyonu KAPALI. Manuel müdahale veya alternatif güzergah algoritmasının devreye sokulması gerekiyor!</li>`;
+               <li class="text-red-400 font-bold mt-2 inline-block text-lg">AI Optimizasyonu KAPALI. Manuel müdahale gerekiyor!</li>`;
 
         modal.innerHTML = `
-            <div class="bg-slate-900 border border-slate-700/50 rounded-2xl w-[90%] sm:w-full max-w-3xl max-h-[90vh] flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden relative border-t-4 border-t-${aiColor}-500 transform transition-all scale-100 opacity-100">
-                <div class="bg-slate-800 border-b border-slate-700 flex-shrink-0 z-20 shadow-2xl">
-                    <div class="px-6 py-5 flex justify-between items-center border-b border-slate-700/50">
+            <div class="bg-slate-900 border border-slate-700/50 rounded-3xl w-[95%] sm:w-full max-w-4xl flex flex-col shadow-[0_0_100px_rgba(0,0,0,0.8)] relative border-t-8 border-t-${aiColor}-600 transform transition-all mb-10">
+                <div class="flex flex-col flex-shrink-0">
+                    <div class="px-6 py-5 flex justify-between items-center border-b border-slate-700/50 bg-slate-800">
                         <h2 class="text-xl font-black text-white flex items-center gap-3 tracking-widest uppercase"><span class="text-blue-400 text-2xl">✨</span> STRATEJİK ANALİZ RAPORU</h2>
                         <button id="close-report-modal" class="text-slate-400 hover:text-white text-3xl leading-none transition-colors border-none bg-transparent cursor-pointer">&times;</button>
                     </div>
-                    <div class="px-6 py-4 bg-slate-900">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-slate-800 p-4 border border-slate-700 rounded-xl relative overflow-hidden">
-                               <p class="font-bold text-slate-500 mb-2 text-[10px] uppercase tracking-wider">🚥 Trafik Analizi</p>
+                    <div class="px-6 py-6 bg-slate-900 border-b border-slate-800">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-slate-800 p-5 border border-slate-700 rounded-2xl">
+                               <p class="font-bold text-slate-500 mb-3 text-[11px] uppercase tracking-wider">🚥 Trafik Analizi</p>
                                ${trafficHtml}
                             </div>
-                            <div class="bg-slate-800 p-4 border border-slate-700 rounded-xl relative overflow-hidden">
-                               <p class="font-bold text-slate-500 mb-2 text-[10px] uppercase tracking-wider">🚛 Kurtarma Kapasitesi</p>
-                               <p class="text-white text-lg font-bold" id="report-truck-text">-- Tır Yolda</p>
-                               <p class="text-slate-500 mt-1 text-[11px]">Aktif operasyonel güç.</p>
+                            <div class="bg-slate-800 p-5 border border-slate-700 rounded-2xl">
+                               <p class="font-bold text-slate-500 mb-3 text-[11px] uppercase tracking-wider">🚛 Kurtarma Kapasitesi</p>
+                               <p class="text-white text-2xl font-black" id="report-truck-text">-- Tır Yolda</p>
+                               <p class="text-slate-500 mt-2 text-xs">Aktif operasyonel güç.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="p-6 overflow-y-auto custom-scrollbar text-slate-300 text-sm space-y-6 flex-1 bg-slate-900">
-                    <div class="bg-blue-900/20 border border-blue-500/30 p-5 rounded-xl">
-                       <div class="flex items-center justify-between mb-3">
-                           <p class="font-bold text-blue-400 uppercase tracking-wide text-xs">Durum Özeti</p>
-                           <span class="bg-${aiColor}-500/30 text-${aiColor}-300 text-[10px] font-bold px-3 py-1 rounded-full border border-${aiColor}-500/40">${aiStatusText}</span>
-                       </div>
-                       <p id="report-summary-text" class="text-base text-slate-200 leading-relaxed font-medium">Gemini AI tarafından hesaplanan güncel kriz senaryosu verileri.</p>
+                <div class="p-8 text-slate-300 text-sm space-y-8 bg-slate-900">
+                    <div class="bg-blue-900/20 border border-blue-500/30 p-6 rounded-2xl">
+                       <p class="font-bold text-blue-400 uppercase tracking-wide text-xs mb-4">Durum Özeti</p>
+                       <p id="report-summary-text" class="text-lg text-slate-200 leading-relaxed font-semibold">Gemini AI tarafından hesaplanan güncel kriz senaryosu verileri.</p>
                     </div>
                     
-                    <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
                        <p class="font-bold text-cyan-400 text-base mb-4 flex items-center gap-2">🧠 AI Optimizasyon Tavsiyeleri</p>
-                       <ul class="list-disc pl-5 space-y-3 text-slate-300 text-sm leading-relaxed">
+                       <ul class="list-disc pl-5 space-y-4 text-slate-300 text-base leading-relaxed">
                            ${adviceHtml}
                        </ul>
                     </div>
