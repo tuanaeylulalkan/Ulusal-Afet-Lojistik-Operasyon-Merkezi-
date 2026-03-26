@@ -1,5 +1,5 @@
-const INTERNET_MOCK_URL = '../mock-data/internet-requests.json';
-const MESH_MOCK_URL = '../mock-data/mesh-requests.json';
+const INTERNET_MOCK_URL = 'mock-data/internet-requests.json';
+const MESH_MOCK_URL = 'mock-data/mesh-requests.json';
 
 /**
  * İnternet kanalı — kurumsal / makro veri (mock JSON).
