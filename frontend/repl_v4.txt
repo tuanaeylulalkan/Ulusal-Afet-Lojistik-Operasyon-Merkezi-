@@ -1,0 +1,472 @@
+function updateSimUI() {
+    if(!window.selectedCaseObj) return;
+    const uiCity = (window.selectedCaseObj.city || 'Bölge').toUpperCase();
+    
+    const cityTitle = document.getElementById('tab2-city-title');
+    if(cityTitle) cityTitle.textContent = `${uiCity} ACİL OPERASYONU`;
+    
+    const canvasTitle = document.getElementById('tab2-canvas-title');
+    if(canvasTitle) canvasTitle.innerHTML = `${uiCity} <span class="text-slate-500">/ KRİZ SİMÜLASYONU</span>`;
+    
+    const caseSubtitle = document.getElementById('tab2-case-subtitle');
+    if(caseSubtitle) caseSubtitle.textContent = `HEDEF VAKA: ${window.selectedCaseObj.explanation || 'Acil alan yardımı'}`;
+    
+    dynamicStreets = getDynamicStreets(uiCity);
+    
+    simTruckTotal = Math.floor(Math.random() * 15) + 15; 
+    const countEl = document.getElementById('suggested-truck-count');
+    if(countEl) countEl.textContent = simTruckTotal;
+    
+    const timeEl = document.getElementById('time-saved-text');
+    if(timeEl) timeEl.textContent = '0s 0dk 0sn';
+    
+    const listEl = document.getElementById('route-panel-list');
+    if(listEl) listEl.innerHTML = `<div class="h-full flex items-center justify-center text-slate-500 italic text-sm mt-8">Sevkiyat bekleniyor...</div>`;
+    
+    const btnApprove = document.getElementById('btn-approve-trucks');
+    if(btnApprove) {
+       btnApprove.textContent = 'ONAYLA';
+       btnApprove.classList.remove('bg-emerald-600', 'cursor-not-allowed', 'opacity-50');
+       btnApprove.classList.add('bg-emerald-500');
+       btnApprove.disabled = false;
+    }
+    
+    const btnCustom = document.getElementById('btn-custom-trucks');
+    if(btnCustom) {
+       btnCustom.innerHTML = 'SAYI GİR';
+    }
+    
+    const btnStart = document.getElementById('btn-start-sim');
+    if(btnStart) {
+       btnStart.className = 'bg-blue-600/50 hover:bg-blue-600 text-white text-sm font-bold py-2 px-5 rounded-lg flex items-center justify-center gap-2 transition-all opacity-40 cursor-not-allowed';
+       btnStart.innerHTML = '▶ SEVKİYATI BAŞLAT';
+       btnStart.disabled = true;
+    }
+    
+    const statText = document.getElementById('system-status-text');
+    if(statText) statText.textContent = 'Onay Bekleniyor...';
+    
+    const statDot = document.getElementById('status-dot');
+    if(statDot) statDot.className = 'w-3 h-3 rounded-full bg-slate-500 ml-6';
+    
+    const aiBadge = document.getElementById('ai-opt-badge');
+    if(aiBadge) {
+        aiBadge.style.display = 'none'; 
+    }
+    
+    const rev = document.getElementById('btn-revert-approve');
+    if(rev) rev.remove();
+    const modal = document.getElementById('ai-report-modal');
+    if(modal) modal.classList.add('hidden');
+}
+
+function bindSimControls() {
+    const btnApprove = document.getElementById('btn-approve-trucks');
+    const btnStart = document.getElementById('btn-start-sim');
+    const btnCustom = document.getElementById('btn-custom-trucks');
+    const btnReport = document.getElementById('btn-strategic-report');
+
+    function openReportModal() {
+        let modal = document.getElementById('ai-report-modal');
+        if(!modal) {
+            modal = document.createElement('div');
+            modal.id = 'ai-report-modal';
+            modal.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm hidden';
+            modal.innerHTML = `
+                <div class="bg-slate-900 border border-slate-700/50 rounded-2xl w-[90%] sm:w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative border-t-4 border-t-blue-500">
+                    <div class="bg-slate-800/80 px-6 py-4 flex justify-between items-center border-b border-slate-700 backdrop-blur-md">
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2 tracking-widest uppercase"><span class="text-blue-400">✨</span> Stratejik Analiz Raporu</h2>
+                        <button id="close-report-modal" class="text-slate-400 hover:text-white text-2xl leading-none transition-colors">&times;</button>
+                    </div>
+                    <div class="p-6 overflow-y-auto custom-scrollbar text-slate-300 text-sm space-y-6">
+                        <div class="bg-blue-900/20 border border-blue-500/30 p-4 rounded-xl shadow-inner">
+                           <p class="font-bold text-blue-400 mb-2 uppercase tracking-wide text-xs">Durum Özeti</p>
+                           <p id="report-summary-text" class="text-base text-white">Gemini AI tarafından hesaplanan güncel kriz senaryosu verileri.</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-800/50 p-4 border border-slate-700/50 rounded-xl">
+                               <p class="font-bold text-slate-400 mb-2 text-[10px] uppercase">Trafik Yoğunluk Analizi</p>
+                               <p class="text-white text-lg font-bold">%120 Darboğaz <span class="text-red-500 text-sm ml-2 font-normal">▲ 45 dk gecikme</span></p>
+                            </div>
+                            <div class="bg-slate-800/50 p-4 border border-slate-700/50 rounded-xl">
+                               <p class="font-bold text-slate-400 mb-2 text-[10px] uppercase">Planlanan Kurtarma Kapasitesi</p>
+                               <p class="text-white text-lg font-bold" id="report-truck-text">-- Tır Yolda <span class="text-emerald-500 text-sm ml-2 font-normal">Optimum</span></p>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                           <p class="font-bold text-slate-200">AI Tavsiyeleri ve Otomatik Müdahaleler</p>
+                           <ul class="list-disc pl-5 space-y-2 text-slate-400">
+                               <li>Ana yollardaki kilitlenmeyi aşmak için sevkiyatın 3'lü kafileler halinde tali yollara (Güney Servis Hattı) kaydırılması planlandı.</li>
+                               <li>Saha güvenliği için araçlara mesh network üzerinden offline koordinat güncellemeleri atandı.</li>
+                               <li class="text-emerald-400 font-bold bg-emerald-900/30 p-2 rounded inline-block">AI Optimizasyonu aktif edildiğinde kazanılacak maksimum süre: 2 Saat 15 Dakika.</li>
+                           </ul>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-800/50 flex justify-end">
+                       <button id="close-report-btn" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-6 rounded-lg transition-transform active:scale-95 shadow-lg">KAPAT</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('close-report-modal').addEventListener('click', () => modal.classList.add('hidden'));
+            document.getElementById('close-report-btn').addEventListener('click', () => modal.classList.add('hidden'));
+        }
+        
+        const summary = document.getElementById('report-summary-text');
+        if(summary && window.selectedCaseObj) {
+            summary.innerHTML = `<strong>${window.selectedCaseObj.city}</strong> bölgesinde belirtilen <em>"${window.selectedCaseObj.explanation}"</em> sebebiyle acil müdahale kapsamında <strong>${simTruckTotal} TIR</strong> sahaya indirilmiştir.`;
+        }
+        const rtt = document.getElementById('report-truck-text');
+        if(rtt) rtt.innerHTML = `${simTruckTotal} Tır <span class="text-emerald-500 text-sm ml-2 font-normal">Hazır Bekliyor</span>`;
+        
+        modal.classList.remove('hidden');
+    }
+
+    btnReport?.addEventListener('click', () => {
+        showToast("📄 Stratejik Analiz Raporu oluşturuluyor... (Gemini)", 2000);
+        setTimeout(() => {
+           showToast("✅ Rapor Hazır! Kilitlenme rotaları analiz edildi.");
+           openReportModal();
+        }, 1500);
+    });
+    
+    btnApprove?.addEventListener('click', () => {
+        if(simState !== 'idle') return;
+        simState = 'approved';
+        
+        btnStart.className = 'bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-3 px-5 rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-500/20';
+        btnStart.innerHTML = '▶ SEVKİYATI BAŞLAT';
+        btnStart.disabled = false;
+        
+        btnApprove.textContent = 'ONAYLANDI ✓';
+        btnApprove.classList.replace('bg-emerald-500', 'bg-emerald-600');
+        btnApprove.disabled = true;
+        
+        // "Sayı Gir" butonunu DEĞİŞTİR butonuna çevir
+        btnCustom.innerHTML = 'DEĞİŞTİR 🔄';
+        
+        document.getElementById('system-status-text').textContent = 'Motor emir bekliyor...';
+        document.getElementById('status-dot').className = 'w-3 h-3 rounded-full bg-amber-500 animate-pulse ml-6';
+    });
+    
+    btnCustom?.addEventListener('click', () => {
+        if(simState === 'running') {
+            showToast("Devam eden bir operasyon için tır sayısı değiştirilemez!");
+            return;
+        }
+
+        if(simState === 'approved') {
+            simState = 'idle';
+            btnApprove.textContent = 'ONAYLA';
+            btnApprove.classList.replace('bg-emerald-600', 'bg-emerald-500');
+            btnApprove.disabled = false;
+            
+            btnStart.className = 'bg-blue-600/50 hover:bg-blue-600 text-white text-sm font-bold py-2 px-5 rounded-lg flex items-center justify-center gap-2 transition-all opacity-40 cursor-not-allowed';
+            btnStart.innerHTML = '▶ SEVKİYATI BAŞLAT';
+            btnStart.disabled = true;
+            
+            btnCustom.innerHTML = 'SAYI GİR';
+            
+            document.getElementById('system-status-text').textContent = 'Onay Bekleniyor...';
+            document.getElementById('status-dot').className = 'w-3 h-3 rounded-full bg-slate-500 ml-6';
+            return;
+        }
+        
+        // Idle Durumunda "Sayı Gir" Inline Input'u
+        const countEl = document.getElementById('suggested-truck-count');
+        if (countEl.innerHTML.includes('<input')) return;
+        
+        countEl.innerHTML = `<input type="number" id="inline-truck-input" value="${simTruckTotal}" class="w-full max-w-[150px] mx-auto bg-slate-800 text-center text-white border-2 border-emerald-500 rounded-xl focus:outline-none focus:ring focus:ring-emerald-500 text-6xl py-2 shadow-[0_0_15px_#10b981]" min="1" max="999">`;
+        const inputEl = document.getElementById('inline-truck-input');
+        inputEl.focus();
+        inputEl.select();
+        
+        const saveVal = () => {
+            const val = parseInt(inputEl.value);
+            if (!isNaN(val) && val > 0) {
+                simTruckTotal = val;
+            }
+            countEl.innerHTML = simTruckTotal;
+            showToast(`Gönderilecek tır sayısı ${simTruckTotal} olarak ayarlandı.`);
+        };
+        
+        inputEl.addEventListener('blur', saveVal);
+        inputEl.addEventListener('keydown', (e) => {
+            if(e.key === 'Enter') inputEl.blur();
+        });
+    });
+    
+    btnStart?.addEventListener('click', () => {
+        if(simState === 'approved') {
+            simState = 'running';
+            window.isAIOptimized = false;
+            
+            btnStart.className = 'bg-red-500 hover:bg-red-400 text-white text-lg font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-red-500/20 active:scale-95';
+            btnStart.innerHTML = '<span class="text-xl">⚠️</span> AI OPTİMİZASYONU: KAPALI';
+            btnStart.disabled = false;
+            
+            // Değiştir butonunu da kitle
+            btnCustom.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            let spawned = 0;
+            routeInterval = setInterval(() => {
+               if(spawned >= simTruckTotal) { clearInterval(routeInterval); return; }
+               spawnTruck();
+               spawned++;
+            }, 800);
+            renderActiveRoutes();
+            
+        } else if (simState === 'running') {
+            window.isAIOptimized = !window.isAIOptimized;
+            if(window.isAIOptimized) {
+                btnStart.className = 'bg-emerald-500 hover:bg-emerald-400 text-white text-lg font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20 active:scale-95';
+                btnStart.innerHTML = '<span class="text-xl">✅</span> AI OPTİMİZASYONU: AÇIK';
+            } else {
+                btnStart.className = 'bg-red-500 hover:bg-red-400 text-white text-lg font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-red-500/20 active:scale-95';
+                btnStart.innerHTML = '<span class="text-xl">⚠️</span> AI OPTİMİZASYONU: KAPALI';
+            }
+            renderActiveRoutes();
+            
+            trucks.forEach(t => {
+              if(!t.reached && t.pathIndex === 0) { 
+                  if(window.isAIOptimized) {
+                      const altPaths = [ ['n1', 'n3', 'n4'], ['n1', 'n5', 'n6'], ['n1', 'n2', 'n3', 'n4'] ];
+                      t.path = altPaths[Math.floor(Math.random() * altPaths.length)];
+                  } else {
+                      t.path = ['n1', 'n2', 'n6'];
+                  }
+              }
+           });
+        }
+    });
+}
+
+function renderActiveRoutes() {
+    const pList = document.getElementById('route-panel-list');
+    if(!pList) return;
+    if (simState !== 'running') {
+        pList.innerHTML = `<div class="h-full flex items-center justify-center text-slate-500 italic text-sm mt-8">Sevkiyat bekleniyor...</div>`;
+        return;
+    }
+    
+    if(window.isAIOptimized) {
+         pList.innerHTML = `
+            <li class="flex justify-between border-b border-slate-700/40 pb-3">
+              <span class="text-slate-400 font-bold">${dynamicStreets[1] || 'Ana Yol'}</span>
+              <span class="text-amber-400 font-bold text-[10px] bg-amber-400/10 px-2 py-1 rounded border border-amber-400/20">Rahatlıyor</span>
+            </li>
+            <li class="flex justify-between border-b border-slate-700/40 pb-3">
+              <span class="text-emerald-400 font-bold">${dynamicStreets[0] || 'Otoyol'}</span>
+              <span class="text-emerald-400 font-bold text-[10px] bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">Açık</span>
+            </li>
+            <li class="flex justify-between pb-3">
+              <span class="text-emerald-400 font-bold">${dynamicStreets[4] || 'Tali Yol'}</span>
+              <span class="text-emerald-400 font-bold text-[10px] bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">Açık</span>
+            </li>
+        `;
+    } else {
+         pList.innerHTML = `
+            <li class="flex justify-between border-b border-red-900/40 pb-3">
+              <span class="text-red-400 font-bold">${dynamicStreets[1] || 'Ana Yol'}</span>
+              <span class="text-red-500 font-bold text-[10px] bg-red-500/10 px-2 py-1 rounded border border-red-500/20 animate-pulse">DARBOĞAZ</span>
+            </li>
+            <li class="flex justify-between border-b border-slate-700/40 pb-3">
+              <span class="text-slate-500">${dynamicStreets[0] || 'Otoyol'}</span>
+              <span class="text-slate-600 text-[10px]">Pasif</span>
+            </li>
+            <li class="flex justify-between pb-3">
+              <span class="text-slate-500">${dynamicStreets[4] || 'Tali Yol'}</span>
+              <span class="text-slate-600 text-[10px]">Pasif</span>
+            </li>
+        `;
+    }
+}
+
+const C_NODES = {
+  n1: {x: 100, y: 150}, n2: {x: 350, y: 250}, n3: {x: 550, y: 100}, n4: {x: 650, y: 200}, n5: {x: 150, y: 350}, n6: {x: 650, y: 350}
+};
+const C_EDGES = [
+  { from:'n1', to:'n3', streetIdx: 0, type: 'tali' }, { from:'n1', to:'n2', streetIdx: 1, type: 'ana' }, { from:'n2', to:'n3', streetIdx: 2, type: 'ana' }, 
+  { from:'n3', to:'n4', streetIdx: 3, type: 'tali' }, { from:'n2', to:'n6', streetIdx: 4, type: 'ana' }, { from:'n5', to:'n2', streetIdx: 5, type: 'tali' }, 
+  { from:'n5', to:'n6', streetIdx: 6, type: 'tali' }
+];
+
+function spawnTruck() {
+    let chosenPath = [];
+    if (!window.isAIOptimized) {
+        chosenPath = ['n1', 'n2', 'n6']; 
+    } else {
+        const altPaths = [ ['n1', 'n3', 'n4'], ['n1', 'n5', 'n6'], ['n1', 'n2', 'n3', 'n4'] ];
+        chosenPath = altPaths[Math.floor(Math.random() * altPaths.length)];
+    }
+    trucks.push({
+        x: C_NODES.n1.x, y: C_NODES.n1.y, path: chosenPath, pathIndex: 0, reached: false,
+        offsetY: (Math.random() - 0.5) * 12, offsetX: (Math.random() - 0.5) * 12
+    });
+}
+
+function drawRouteCanvas() {
+  const c = document.getElementById('route-canvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  
+  function resize() {
+      c.width = c.parentElement.clientWidth;
+      c.height = c.parentElement.clientHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function render() {
+    const w = c.width;
+    const h = c.height;
+    ctx.clearRect(0, 0, w, h);
+    
+    const scaleX = w / 800; 
+    const scaleY = h / 450;
+
+    C_EDGES.forEach(e => {
+        const p1 = C_NODES[e.from];
+        const p2 = C_NODES[e.to];
+        let color = '#334155';
+        let width = 5;
+        if (e.type === 'ana') {
+            color = window.isAIOptimized ? '#64748b' : '#ef4444'; 
+            width = 7;
+        } else {
+            color = window.isAIOptimized ? '#10b981' : '#334155';
+            width = 4;
+        }
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.beginPath();
+        ctx.moveTo(p1.x * scaleX, p1.y * scaleY);
+        ctx.lineTo(p2.x * scaleX, p2.y * scaleY);
+        ctx.stroke();
+        
+        const mx = (p1.x + p2.x)/2 * scaleX;
+        const my = (p1.y + p2.y)/2 * scaleY - 10;
+        ctx.fillStyle = '#64748b';
+        ctx.font = '10px "DM Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(dynamicStreets[e.streetIdx] || '', mx, my);
+    });
+
+    Object.values(C_NODES).forEach(n => {
+        ctx.strokeStyle = '#475569'; 
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(n.x * scaleX, n.y * scaleY, 8, 0, Math.PI*2);
+        ctx.stroke();
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+    });
+
+    trucks.forEach(t => {
+        if (t.reached) return;
+        ctx.fillStyle = window.isAIOptimized ? '#34d399' : '#3b82f6';
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.beginPath();
+        ctx.arc(t.x * scaleX + t.offsetX, t.y * scaleY + t.offsetY, 5, 0, Math.PI*2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
+        const pn = C_NODES[t.path[t.pathIndex + 1]];
+        if (pn) {
+            const dx = pn.x - t.x;
+            const dy = pn.y - t.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            
+            const isMainBottleneck = t.path[t.pathIndex] === 'n1' || t.path[t.pathIndex] === 'n2';
+            let speed = 1.0;
+            if (!window.isAIOptimized) { speed = isMainBottleneck ? 0.3 : 0.8; } else { speed = 2.0; }
+            if (dist > speed) {
+                t.x += (dx / dist) * speed;
+                t.y += (dy / dist) * speed;
+            } else {
+                t.x = pn.x;
+                t.y = pn.y;
+                t.pathIndex++;
+                if (t.pathIndex >= t.path.length - 1) t.reached = true;
+            }
+        } else { t.reached = true; }
+    });
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+let statusCounter = 0;
+function initChart() {
+    const ctxCanvas = document.getElementById('capacity-chart');
+    if(!ctxCanvas) return;
+    
+    chartInstance = new Chart(ctxCanvas, {
+        type: 'bar',
+        data: {
+            labels: ['Ana Yol', 'Çevre Yolu', 'Tali Yol'],
+            datasets: [{
+                label: 'Kapasite Yükü (%)',
+                data: [0, 0, 0],
+                backgroundColor: ['#ef4444', '#10b981', '#10b981'],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { min: 0, max: 150, grid: { color: 'rgba(51, 65, 85, 0.2)'}, ticks: { color: '#64748b' } },
+                x: { grid: { display: false }, ticks: { color: '#64748b', font: {size: 10} } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+    
+    setInterval(() => {
+        if(simState === 'running') {
+            let ana=0, cevre=0, tali=0;
+            if(window.isAIOptimized) {
+                ana = 20 + Math.random()*10; cevre = 70 + Math.random()*20; tali = 40 + Math.random()*15;
+            } else {
+                ana = 110 + Math.random()*35; cevre = 5 + Math.random()*5; tali = 2 + Math.random()*5;
+            }
+            chartInstance.data.datasets[0].data = [ana, cevre, tali];
+            chartInstance.data.datasets[0].backgroundColor = [
+                ana > 100 ? '#ef4444' : '#3b82f6', cevre > 100 ? '#ef4444' : '#10b981', tali > 100 ? '#ef4444' : '#10b981'
+            ];
+            chartInstance.update();
+            
+            if(window.isAIOptimized) {
+                 savedTimeSecs += 2;
+                 let hrs = Math.floor(savedTimeSecs / 3600);
+                 let mins = Math.floor((savedTimeSecs % 3600) / 60);
+                 let secs = savedTimeSecs % 60;
+                 document.getElementById('time-saved-text').textContent = `${hrs}s ${mins}dk ${secs}sn`;
+            }
+            
+            statusCounter++;
+            const statText = document.getElementById('system-status-text');
+            if(statusCounter % 4 === 0 && statText) {
+                if(window.isAIOptimized) {
+                    const msgs = [
+                        `Konvoy sahada, <span class="text-emerald-400 font-bold ml-1">optimum akış sağlandı</span>...`,
+                        `Tali yollar aktif, <span class="text-emerald-400 font-bold ml-1">akışkanlık %100</span>...`,
+                        `Güvenli koridor kullanılıyor, <span class="text-emerald-400 font-bold ml-1">gecikme yok</span>...`,
+                        `Sahadan veri alınıyor, <span class="text-emerald-400 font-bold ml-1">koordinatlar temiz</span>...`
+                    ];
+                    statText.innerHTML = msgs[Math.floor(Math.random() * msgs.length)];
+                } else {
+                    const msgs = [
+                        `Konvoy sahada, <span class="text-white font-bold ml-1">darboğaz yaşanıyor</span>...`,
+                        `Ana arterde yoğunlaşma, <span class="text-red-400 font-bold ml-1">hız %40 düştü</span>...`,
+                        `Kavşak kilitlenmesi, <span class="text-red-400 font-bold ml-1">bekleme süresi artıyor</span>...`,
+                        `Alternatif rota aranıyor, <span class="text-red-400 font-bold ml-1">risk seviyesi yüksek</span>...`
+                    ];
+                    statText.innerHTML = msgs[Math.floor(Math.random() * msgs.length)];
+                }
+            }
+        }
+    }, 1000);
+}

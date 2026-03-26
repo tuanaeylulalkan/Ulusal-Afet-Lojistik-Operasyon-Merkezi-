@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "channel": "mesh",
+    "region": "Hatay",
+    "generatedAt": "2025-03-24T10:00:00.000Z"
+  },
+  "requests": [
+    {
+      "id": "req-mesh-hty-001",
+      "city": "Hatay",
+      "type": "enkaz_alti_ses",
+      "summary": "Antakya merkez, çok katlı enkaz altından düzenli vurma sesi — mesh düğüm 7.",
+      "explanation": "Enkaz altında yaşam belirtisi olabilecek düzenli ses tespit edildi.",
+      "source": "mesh",
+      "receivedAt": "2025-03-24T09:12:00.000Z",
+      "riskParams": { "canKaybiIhtimali": "yuksek", "ulasimDurumu": "kopru_hasarli" },
+      "priorityScore": 96,
+      "priorityTier": "critical"
+    },
+    {
+      "id": "req-mesh-hty-002",
+      "city": "Hatay",
+      "type": "sokak_yangini",
+      "summary": "İskenderun sahil kesimi, küçük çaplı yangın — sakinler tahliye edildi (mesh ihbarı).",
+      "explanation": "Yangın kontrol altında; bölge tahliye edildi, yeniden alevlenebilir.",
+      "source": "mesh",
+      "receivedAt": "2025-03-24T09:25:00.000Z",
+      "riskParams": { "canKaybiIhtimali": "dusuk", "ulasimDurumu": "acik" },
+      "priorityScore": 41,
+      "priorityTier": "medium"
+    },
+    {
+      "id": "req-mesh-hty-003",
+      "city": "Hatay",
+      "type": "su_gida",
+      "summary": "Konteyner alanı: içme suyu ve hazır gıda kısıtı; dağıtım noktası talebi.",
+      "explanation": "İçme suyu ve kumanya dağıtımında kısıt bildirildi.",
+      "source": "mesh",
+      "receivedAt": "2025-03-24T09:40:00.000Z",
+      "riskParams": { "canKaybiIhtimali": "orta", "ulasimDurumu": "yavas" },
+      "priorityScore": 68,
+      "priorityTier": "medium"
+    },
+    {
+      "id": "req-mesh-ist-001",
+      "city": "İstanbul",
+      "type": "genel",
+      "summary": "Mahalle gönüllüsü: çadır eksikliği bildirimi (mesh senkron).",
+      "explanation": "Barınma için çadır ihtiyacı yerel gönüllü tarafından iletildi.",
+      "source": "mesh",
+      "receivedAt": "2025-03-24T09:45:00.000Z",
+      "riskParams": { "canKaybiIhtimali": "dusuk", "ulasimDurumu": "acik" },
+      "priorityScore": 35,
+      "priorityTier": "low"
+    }
+  ]
+}
