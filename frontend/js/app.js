@@ -704,26 +704,28 @@ function bindSimControls() {
 
         modal.innerHTML = `
             <div class="bg-slate-900 border border-slate-700/50 rounded-2xl w-[90%] sm:w-full max-w-3xl max-h-[90vh] flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden relative border-t-4 border-t-${aiColor}-500 transform transition-all scale-100 opacity-100">
-                <div class="bg-slate-800/90 px-6 py-5 flex justify-between items-center border-b border-slate-700 backdrop-blur-md">
-                    <h2 class="text-xl font-black text-white flex items-center gap-3 tracking-widest uppercase"><span class="text-blue-400 text-2xl">✨</span> STRATEJİK ANALİZ RAPORU</h2>
-                    <button id="close-report-modal" class="text-slate-400 hover:text-white text-3xl leading-none transition-colors drop-shadow-md">&times;</button>
-                </div>
-                <div class="px-6 py-4 bg-slate-900 border-b border-slate-800">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-slate-800/60 p-5 border border-slate-700/50 rounded-xl relative overflow-hidden shadow-lg">
-                           <div class="absolute -right-4 -top-4 w-16 h-16 bg-${aiColor}-500/10 rounded-full blur-xl"></div>
-                           <p class="font-bold text-slate-400 mb-3 text-[11px] uppercase tracking-wider flex items-center gap-2">🚥 Trafik Yoğunluk Analizi</p>
-                           ${trafficHtml}
-                        </div>
-                        <div class="bg-slate-800/60 p-5 border border-slate-700/50 rounded-xl relative overflow-hidden shadow-lg">
-                           <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-500/10 rounded-full blur-xl"></div>
-                           <p class="font-bold text-slate-400 mb-3 text-[11px] uppercase tracking-wider flex items-center gap-2">🚛 Kurtarma Kapasitesi</p>
-                           <p class="text-white text-xl font-bold" id="report-truck-text">-- Tır Yolda</p>
-                           <p class="text-slate-400 mt-2 text-xs">Sahadaki aktif operasyonel güç.</p>
+                <div class="bg-slate-800/95 border-b border-slate-700 backdrop-blur-md flex-shrink-0 z-20 shadow-xl">
+                    <div class="px-6 py-5 flex justify-between items-center border-b border-slate-700/50">
+                        <h2 class="text-xl font-black text-white flex items-center gap-3 tracking-widest uppercase"><span class="text-blue-400 text-2xl">✨</span> STRATEJİK ANALİZ RAPORU</h2>
+                        <button id="close-report-modal" class="text-slate-400 hover:text-white text-3xl leading-none transition-colors drop-shadow-md">&times;</button>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-900/40">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-slate-800 p-4 border border-slate-700 rounded-xl relative overflow-hidden shadow-inner">
+                               <div class="absolute -right-4 -top-4 w-16 h-16 bg-${aiColor}-500/10 rounded-full blur-xl"></div>
+                               <p class="font-bold text-slate-400 mb-2 text-[10px] uppercase tracking-wider flex items-center gap-2">🚥 Trafik Analizi</p>
+                               ${trafficHtml}
+                            </div>
+                            <div class="bg-slate-800 p-4 border border-slate-700 rounded-xl relative overflow-hidden shadow-inner">
+                               <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-500/10 rounded-full blur-xl"></div>
+                               <p class="font-bold text-slate-400 mb-2 text-[10px] uppercase tracking-wider flex items-center gap-2">🚛 Kurtarma Kapasitesi</p>
+                               <p class="text-white text-lg font-bold" id="report-truck-text">-- Tır Yolda</p>
+                               <p class="text-slate-500 mt-1 text-[11px]">Aktif operasyonel güç.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="p-6 overflow-y-auto custom-scrollbar text-slate-300 text-sm space-y-6 flex-1">
+                <div class="p-6 overflow-y-auto custom-scrollbar text-slate-300 text-sm space-y-6 flex-1 bg-slate-900/50">
                     <div class="bg-blue-900/10 border border-blue-500/20 p-5 rounded-xl shadow-inner">
                        <div class="flex items-center justify-between mb-3">
                            <p class="font-bold text-blue-400 uppercase tracking-wide text-xs">Durum Özeti</p>
