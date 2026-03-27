@@ -1,58 +1,89 @@
-Afet Lojistik Kontrol Sistemi: Kullanıcı Akışı
-1. Giriş ve Bölge Seçimi
-Kullanıcı uygulamayı açtığında karşısına "Ulusal Lojistik Operasyon Merkezi" paneli çıkar.
+# Afet Lojistik Kontrol Sistemi: Kullanıcı Akışı (User Flow)
 
-Ne Görür? Arka planda Türkiye'nin dijital haritası ve sol tarafta şehir seçim menüsü.
+## Amaç
+Bu belge, kullanıcının sistem içerisindeki etkileşimlerini ve sistemin bu etkileşimlere verdiği yanıtları adım adım açıklamak amacıyla hazırlanmıştır.
 
-Ne Yapar? "Aktif Kriz Bölgesi" açılır menüsünden operasyonu yöneteceği şehri (Örn: Hatay, İstanbul) seçer.
 
-Sonuç: Sistem, seçilen şehre ait özel veri kanallarını ve harita katmanlarını saniyeler içinde yükler.
+##  Akış Diyagramı
+```
+Şehir Seçimi
+   ↓
+Hibrit Veri Toplama
+   ↓
+AI Triyaj (Gemini)
+   ↓
+Vaka Seçimi
+   ↓
+Sekme 2: Lojistik Operasyon
+   ↓
+Stratejik Analiz & Onay
+   ↓
+Simülasyon Başlatma
+   ↓
+Dinamik Müdahale (Enkaz / Hava)
+   ↓
+AI Optimizasyonu
+   ↓
+Operasyon Tamamlanır
+```
 
-2. Veri Senkronizasyonu ve Talep Toplama
-Yönetici, sahadan gelen ham bilgileri sisteme dahil eder.
 
-Ne Görür? "Mesh" ve "İnternet" senkronizasyon butonları ile boş bir talep listesi.
+##  Adım Adım Kullanıcı Deneyimi
 
-Ne Yapar? * 🌐 İnternet Senkronizasyonu butonuna basarak kurumsal raporları çeker.
+### SEKME 1: AKILLI TALEP MERKEZİ VE TRİYAJ
 
-📡 Mesh Senkronizasyonu ile internetin olmadığı enkaz bölgelerinden gelen "offline" ihbarları sisteme yükler.
+Adım 1: Giriş ve Kriz Bölgesi Seçimi  
+- Kullanıcı: "Aktif Kriz Bölgesi" menüsünden operasyon yapılacak şehri seçer.  
+- Sistem: Seçilen şehre ait arayüzü aktif hale getirir.
 
-Gerekirse manuel olarak 🆘 Acil Bildirim Girişi yapar.
 
-Sonuç: Talepler listede birikir. Gemini AI, her talebi anında analiz ederek can kaybı riskine göre 0-100 arası bir skor verir.
 
-3. Önceliklendirme ve Vaka Seçimi
-Onlarca talep arasından en kritik olanı belirlenir.
+Adım 2: Hibrit Veri Senkronizasyonu  
+- Kullanıcı: İnternet, Mesh Network veya manuel giriş ile sahadan veri girer.  
+- Sistem (AI): Google Gemini modeli gelen metinleri analiz eder:
+  - 0-100 arası öncelik skoru oluşturur  
+  - Vaka türünü belirler  
+  - Gerekli lojistik kaynağı (Tır, Ambulans, İş Makinesi) önerir  
 
-Ne Görür? Aciliyet skoruna göre yukarıdan aşağıya (Kırmızıdan Yeşile) sıralanmış bir talep listesi.
 
-Ne Yapar? En üstteki (Örn: Skor 98 - Enkaz Altında Ses) vakayı inceler ve üzerindeki "SEÇ" butonuna tıklar.
 
-Sonuç: Alt tarafta "Kritik Lojistik Akışına Aktar" butonu aktifleşir ve sistem sevkiyat hazırlığına geçer.
+Adım 3: Vaka Seçimi ve Lojistiğe Aktarım  
+- Kullanıcı: Kritik vakayı seçer ve "Lojistiğe Gönder" butonuna basar.  
+- Sistem: Veriyi paketler ve otomatik olarak Sekme 2'ye geçiş yapar.
 
-4. Sevkiyat Planlama ve Kapasite Onayı
-Operasyonun fiziksel hazırlık aşamasıdır.
 
-Ne Görür? "Sevkiyat Hattı" sekmesine otomatik geçiş yapılır. AI, seçilen vaka için tır sayısı önerir (Örn: "Bu vaka için 15 Tır öneriliyor").
+### SEKME 2: LOJİSTİK OPERASYON VE SİMÜLASYON
 
-Ne Yapar? Önerilen tır sayısını uygun bulursa "Onayla" der, ya da sahadaki tır mevcuduna göre "Sayı Gir" diyerek rakamı manuel düzeltir.
+Adım 4: Stratejik Analiz ve Kapasite Onayı  
+- Kullanıcı: "Stratejik Analiz Raporu Al" butonuna basar, önerilen araç sayılarını inceler ve onaylar.  
+- Sistem: Canvas üzerinde araçları (Tır, Ambulans) sahaya gönderir.
 
-Sonuç: Onay verildiğinde "Sevkiyatı Başlat" butonu aktif hale gelir.
 
-5. Canlı Rota Takibi ve AI Optimizasyonu
-Tırlar yola çıkar ve trafik yönetilir.
+Adım 5: Darboğaz Tespiti (AI Kapalı Durum)  
+- Sistem: Araçlar tek bir hatta yoğunlaşır.  
+- Sonuç: Kapasite yükü artar, grafik kırmızıya döner ve zaman kazancı oluşmaz.
 
-Ne Görür? Harita üzerinde hareket eden mavi noktalar (tırlar) ve kilitlenmiş kırmızı yollar.
 
-Ne Yapar? "AI OPTİMİZASYONU" butonunu aktif eder.
+Adım 6: AI Optimizasyonunun Devreye Alınması  
+- Kullanıcı: "AI Optimizasyonu" özelliğini aktif eder.  
+- Sistem: BFS algoritması ile alternatif rotalar oluşturur:
+  - Yük dengeli dağıtılır  
+  - Trafik azalır  
+  - Zaman kazancı artar  
 
-Sonuç: Sistem, tırları ana arterlerden çıkarıp "Aktif Rota Listesi"ndeki güvenli tali yollara dağıtır. Yollar yeşile döner ve "Zaman Kazancı" sayacı gerçek zamanlı olarak artmaya başlar.
 
-6. Raporlama ve Kapanış
-Operasyonun stratejik değerlendirmesi yapılır.
+Adım 7: Dinamik Saha Müdahalesi  
+- Kullanıcı: Hava durumunu kötüleştirir veya yola enkaz ekler.  
+- Sistem:
+  - Araç hızlarını düşürür  
+  - Yolları kapatır  
+  - İş makinelerini bölgeye yönlendirir  
 
-Ne Görür? Toplam kazanılan süre, yol kapasite grafikleri ve operasyonun başarı durumu.
+- Sonuç: Enkaz kaldırılır, yollar açılır ve operasyon devam eder.
 
-Ne Yapar? "Stratejik Rapor Oluştur" butonuna tıklar.
 
-Sonuç: Gemini AI, o şehre ve o vakaya özel; yapılan müdahalenin başarısını ve bir sonraki adım için önerilerini içeren profesyonel bir metin hazırlar. Yönetici bu verilerle üst amirlerini bilgilendirir.
+Adım 8: Operasyon Kapanışı  
+- Sistem: Tüm araçlar hedefe ulaştığında:
+  - Rotalar açık hale gelir  
+  - Verimlilik maksimize edilir  
+  - Operasyon başarıyla tamamlanır  

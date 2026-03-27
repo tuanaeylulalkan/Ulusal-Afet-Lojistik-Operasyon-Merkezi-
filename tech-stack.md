@@ -1,90 +1,57 @@
-Önerilen Teknoloji Yığını (Simple Web Stack)
-Dil: HTML5 / CSS3 / JavaScript (Vanilla)
+#  Teknoloji Yığını ve Seçim Gerekçeleri (Tech Stack)
 
-Neden? Hiçbir kurulum gerektirmez, doğrudan tarayıcıda çalışır. Öğrenme eğrisi en düşük dildir.
+Bu proje, afet anlarındaki "Altın Saatler" içerisinde maksimum performans ve sıfır kurulum maliyeti hedefleyerek **Serverless (Sunucusuz) İstemci Taraflı (Client-Side)** bir mimari ile inşa edilmiştir.
 
-Tasarım: Tailwind CSS
 
-Neden? Uzun CSS dosyaları yazmak yerine, HTML içine küçük sınıflar ekleyerek (Örn: bg-red-500) profesyonel görünümlü paneller tasarlamanı sağlar.
+## 1. Yapay Zeka Motoru: Google Gemini 1.5 Flash
+- **Kullanım Amacı:** Sahadan gelen karmaşık verilerin (İnternet, Mesh, Manuel) triyajı, 0-100 arası aciliyet skorlaması ve lojistik araç (Tır, Ambulans, İş Makinesi) tahsisi.
 
-Yapay Zeka: Gemini API (Google AI SDK)
+- **Seçim Gerekçesi (Neden?):**
+  - **Hız:** Afet anlarında saniyeler kritiktir. "Flash" modeli, verileri saniyeler içinde analiz ederek yapılandırılmış (JSON formatında) çıktılar üretir.  
+  - **Bağlam Anlayışı:** "Enkaz altında ses var" gibi kritik ifadeleri doğru yorumlayarak uygun müdahale önerileri oluşturabilir.  
 
-Neden? Bir "backend" (arka uç) sunucusu kurmadan doğrudan JavaScript üzerinden Google'ın en güçlü modellerine erişebilirsin.
+---
 
-Görselleştirme: Canvas API (Tarayıcının yerleşik özelliği)
+## 2. Simülasyon ve Optimizasyon: Vanilla JavaScript (ES6+) & HTML5 Canvas
+- **Kullanım Amacı:** Operasyon sekmesinde canlı harita üzerinde araç hareketlerini, darboğazları ve çevresel etkileri (hava durumu, enkaz) gerçek zamanlı simüle etmek.
 
-Neden? Harita üzerindeki tır hareketlerini ve yol çizgilerini ekstra kütüphane yüklemeden akıcı bir şekilde çizmeni sağlar.
+- **Seçim Gerekçesi (Neden?):**
+  - **Performans:** Canvas API, yüksek performanslı grafik çizimi sağlar ve tarayıcıyı yormadan akıcı simülasyon imkanı sunar.  
+  - **Algoritmik Esneklik:** BFS (Breadth-First Search) ve Dijkstra gibi rota optimizasyon algoritmaları doğrudan uygulanabilir.  
 
-Bu Teknolojileri Neden Seçiyoruz?
+---
 
-Shutterstock
-Keşfet
-Sıfır Kurulum: Bilgisayarına ağır programlar (SQL Server, Java, Python vb.) yüklemen gerekmez. Sadece bir metin düzenleyici (VS Code) yeterlidir.
+## 3. Veri Analitiği ve Görselleştirme: Chart.js
+- **Kullanım Amacı:** Kapasite yükü, darboğazlar ve optimizasyon sonrası verimlilik artışını görsel olarak sunmak.
 
-Hızlı Prototipleme: Afet anında hız kritiktir. Bu yığın, bir fikri 30 dakika içinde çalışan bir simülasyona dönüştürmek için en hızlı yoldur.
+- **Seçim Gerekçesi (Neden?):**
+  - Hafif ve hızlı çalışır  
+  - Gerçek zamanlı veri görselleştirme sağlar  
+  - Kriz yönetiminde hızlı karar destek sunar  
 
-Doğrudan API Bağlantısı: Google AI SDK sayesinde, "Client-Side" (istemci taraflı) kod yazarak yapay zekayı projenin kalbine yerleştirebilirsin.
+---
 
-Adım Adım Kurulum ve Başlangıç Rehberi
-1. Çalışma Alanını Hazırla
-Bilgisayarına Visual Studio Code (VS Code) indir ve kur.
+## 4. Kullanıcı Arayüzü (UI): Tailwind CSS & Glassmorphism
+- **Kullanım Amacı:** Kullanıcıya sade, okunabilir ve dikkat dağıtmayan bir operasyon paneli sunmak.
 
-VS Code içerisinde "Live Server" eklentisini yükle (Kodunu kaydettiğin an tarayıcıda değişikliği görmeni sağlar).
+- **Seçim Gerekçesi (Neden?):**
+  - **Hızlı Geliştirme:** Tailwind ile hızlı ve esnek arayüz geliştirme mümkündür  
+  - **Okunabilirlik:** Glassmorphism tasarım yaklaşımı ile veriler ön planda tutulur  
 
-2. Proje Klasörünü Oluştur
-Masaüstünde afet-lojistik adında bir klasör oluştur ve içine index.html dosyasını aç.
+---
 
-3. Temel HTML Yapısını Kur
-index.html içine şu yapıyı yapıştır. Bu yapı, Tailwind ve Gemini SDK'sını otomatik olarak projene dahil eder:
+## 5. Mimari Karar: Neden Backend (Sunucu) Kullanılmadı?
+- **Sıfır Kurulum:** Sistem herhangi bir sunucuya ihtiyaç duymadan çalışabilir  
+- **Yüksek Erişilebilirlik:** Afet anlarında merkezi sistemlere bağımlılık azaltılmıştır  
+- **Client-Side Çalışma:** Tüm sistem tarayıcı üzerinde çalışarak hızlı erişim sağlar  
+- **Modüler Yapı (ESM):** import/export yapısı ile kod yönetimi kolaylaştırılmıştır  
 
-HTML
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <title>Afet Lojistik Kontrol</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-900 text-white p-10">
+---
 
-    <h1 class="text-3xl font-bold">Afet Lojistik AI</h1>
-    <textarea id="userInput" class="text-black p-2 w-full mt-4" placeholder="Durumu yazın..."></textarea>
-    <button onclick="analizEt()" class="bg-blue-600 p-2 mt-2 rounded">Analiz Et</button>
-    <div id="sonuc" class="mt-4 p-4 border border-slate-700"></div>
+##  Genel Değerlendirme
 
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/generative-ai": "https://esm.run/@google/generative-ai"
-        }
-      }
-    </script>
-
-    <script type="module">
-      import { GoogleGenerativeAI } from "@google/generative-ai";
-
-      // API Anahtarını buraya yaz (Güvenlik notu: Gerçek projede bunu gizli tutmalısın)
-      const API_KEY = "BURAYA_API_ANAHTARINI_YAPISTIR";
-      const genAI = new GoogleGenerativeAI(API_KEY);
-
-      window.analizEt = async function() {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const prompt = document.getElementById("userInput").value;
-        const sonucDiv = document.getElementById("sonuc");
-
-        sonucDiv.innerText = "Düşünülüyor...";
-        
-        try {
-            const result = await model.generateContent(prompt);
-            sonucDiv.innerText = result.response.text();
-        } catch (error) {
-            sonucDiv.innerText = "Hata: " + error.message;
-        }
-      }
-    </script>
-</body>
-</html>
-4. Uygulamayı Çalıştır
-index.html dosyasındayken sağ alt köşedeki "Go Live" butonuna bas.
-
-Tarayıcında açılan ekrana "Hatay'da 5 tır ekmek ihtiyacı var, yollar tıkalı" yaz ve "Analiz Et" de. Gemini sana anında cevap verecektir.
+Bu teknoloji seçimi sayesinde sistem:
+- Düşük gecikme (low latency) ile çalışır  
+- Hızlı karar alma süreçlerini destekler  
+- Afet anlarında kesintisiz operasyon sağlar  
+- Kaynakların daha verimli kullanılmasına katkıda bulunur  
