@@ -125,7 +125,9 @@ JSON:`;
   // Tüm modeller başarısız olduysa
   console.error('Tüm Gemini modelleri denendi ama bağlantı kurulamadı:', lastError);
   const h = heuristicTriage(summary, city);
-  return { ...h, aiNote: `${h.aiNote}` };
+  // Hata detayını kullanıcıya göster (teşhis için)
+  const errorDetail = lastError ? (lastError.message || lastError.toString()) : 'Bilinmeyen hata';
+  return { ...h, aiNote: `${h.aiNote} (Hata: ${errorDetail.slice(0, 100)})` };
 }
 
 export function scorePlaceholder(request) {
