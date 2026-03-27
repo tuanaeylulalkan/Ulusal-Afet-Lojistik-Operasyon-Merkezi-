@@ -1,0 +1,14 @@
+# Logs ve sistem dosyaları
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# API ve Ortam dosyaları (KRİTİK)
+.env
+frontend/js/env.js
+features/js/env.js
+
+# Build çıktıları
+dist/
+build/

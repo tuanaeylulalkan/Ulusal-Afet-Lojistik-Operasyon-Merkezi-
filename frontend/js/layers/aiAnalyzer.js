@@ -1,7 +1,7 @@
 import { getGeminiApiKey } from '../config.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const MODEL = 'gemini-1.5-flash';
+const MODEL = 'gemini-1.5-flash-latest';
 
 const ALLOWED_TYPES = new Set([
   'genel',
