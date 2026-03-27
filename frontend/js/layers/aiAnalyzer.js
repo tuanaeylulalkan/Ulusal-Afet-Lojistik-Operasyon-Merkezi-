@@ -1,7 +1,7 @@
 import { getGeminiApiKey } from '../config.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const MODEL = 'gemini-1.5-flash-latest';
+const MODEL = 'gemini-1.5-flash';
 
 const ALLOWED_TYPES = new Set([
   'genel',
@@ -88,14 +88,10 @@ export async function analyzeIncomingRequest(summary, city) {
   if (!key) {
     return heuristicTriage(summary, city);
   }
-  const MODELS_TO_TRY = ['gemini-1.5-flash', 'gemini-1.5-flash-8b', 'gemini-pro'];
-  let lastError = null;
 
-  for (const modelName of MODELS_TO_TRY) {
-    try {
-      const genAI = new GoogleGenerativeAI(key);
-      const model = genAI.getGenerativeModel({ model: modelName });
-      const prompt = `Sen afet lojistik triyaj asistanısın. Kullanıcı Türkiye'deki bir il için kısa bir talep metni yazdı.
+  const genAI = new GoogleGenerativeAI(key);
+  const model = genAI.getGenerativeModel({ model: MODEL });
+  const prompt = `Sen afet lojistik triyaj asistanısın. Kullanıcı Türkiye'deki bir il için kısa bir talep metni yazdı.
 
 İl: ${city}
 Talep metni:
@@ -111,23 +107,15 @@ Yalnızca geçerli bir JSON nesnesi döndür (başka metin yok). Alanlar:
 
 JSON:`;
 
-      const result = await model.generateContent(prompt);
-      const text = result.response.text();
-      const parsed = parseModelJson(text);
-      return { ...parsed, aiNote: parsed.aiNote || 'Gemini analizi.' };
-    } catch (e) {
-      console.warn(`${modelName} denemesi başarısız oldu:`, e.message);
-      lastError = e;
-      continue; // Bir sonraki modeli dene
-    }
+  try {
+    const result = await model.generateContent(prompt);
+    const text = result.response.text();
+    const parsed = parseModelJson(text);
+    return { ...parsed, aiNote: parsed.aiNote || 'Gemini analizi.' };
+  } catch (e) {
+    console.warn('Gemini triyaj hatası, heuristik kullanılıyor:', e);
+    return heuristicTriage(summary, city);
   }
-
-  // Tüm modeller başarısız olduysa
-  console.error('Tüm Gemini modelleri denendi ama bağlantı kurulamadı:', lastError);
-  const h = heuristicTriage(summary, city);
-  // Hata detayını kullanıcıya göster (teşhis için)
-  const errorDetail = lastError ? (lastError.message || lastError.toString()) : 'Bilinmeyen hata';
-  return { ...h, aiNote: `${h.aiNote} (Hata: ${errorDetail.slice(0, 100)})` };
 }
 
 export function scorePlaceholder(request) {
