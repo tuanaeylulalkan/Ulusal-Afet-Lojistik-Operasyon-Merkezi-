@@ -47,7 +47,7 @@ git clone https://github.com/tuanaeylulalkan/Ulusal-Afet-Lojistik-Operasyon-Merk
 cd Ulusal-Afet-Lojistik-Operasyon-Merkezi
 
 2. API Anahtarı Ekleyin:
-frontend/index.html dosyasında bulunan window.__GEMINI_API_KEY__ kısmına geçerli bir API anahtarı girin.
+   features/index.html dosyasında bulunan window.__GEMINI_API_KEY__ kısmına geçerli bir API anahtarı girin.
 
 3. Yerel sunucu başlatın:
 npx http-server
