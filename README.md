@@ -11,9 +11,10 @@ Afet anlarında sahadan gelen binlerce karmaşık talebin (sosyal medya, SMS, te
 Bu proje, afet yönetiminde karar destek sistemlerini güçlendirmek ve yapay zeka ile lojistik süreçleri optimize etmek amacıyla geliştirilmiştir.
 
 ##  Çözüm ve Operasyonel Akış
+Bu operasyonel altyapı sayesinde, afet anındaki veri kargaşası ve operasyonel belirsizlik, veriye dayalı profesyonel bir Karar Destek Sistemine dönüşüyor. İnternet altyapısı çöktüğünde dahi kesintisiz çalışan hibrit veri girişi mekanizmasıyla toplanan binlerce karmaşık ihbar, Google Gemini 1.5-Flash tarafından saniyeler içinde analiz edilerek 0-100 arası somut bir Öncelik Skoruna atanıyor. Bu akıllı triyaj süreci, insan hızını aşan bir süratle en kritik vakaları öne çıkarırken; arka planda çalışan Dijkstra ve BFS algoritmaları sahadaki enkaz ve engelleri gerçek zamanlı hesaplayarak lojistik araçlarını en verimli rotalara yönlendiriyor. Sonuç olarak sistem, afet yönetimindeki en büyük darboğaz olan "karar verme süresini" minimize ederek kısıtlı kaynakların en doğru noktaya, en hızlı şekilde ulaşmasını sağlıyor.
 
 ### 1. Sekme: Akıllı Talep Merkezi ve Triyaj
-* **Hibrit Veri Girişi:** Veriler; standart **İnternet**, altyapı çöktüğünde devreye giren **Mesh Network** veya merkeze ulaşan telsiz ihbarlarının **Manuel Girişi** ile toplanır.
+* **Hibrit Veri Girişi:** Veriler; standart **İnternet**, altyapı çöktüğünde devreye giren **Mesh Network** veya merkeze ulaşan telsiz ihbarlarının manuel Girişi ile toplanır.
 * **AI Önceliklendirme:** Toplanan veriler **Google Gemini 1.5-Flash** tarafından analiz edilerek 0 ile 100 arasında bir öncelik skoru alır.
 * **Vaka Yönetimi:** Kritik vakalar detaylandırılarak doğrudan lojistik birimine (2. Sekme) aktarılır.
 
@@ -26,7 +27,7 @@ Bu proje, afet yönetiminde karar destek sistemlerini güçlendirmek ve yapay ze
 
 ##  Canlı Demo
 * **Yayın Linki:** [Ulusal Afet Lojistik Paneli - Vercel](https://ulusal-afet-lojistik-operasyon-merk.vercel.app/)
-* **Demo Video:** [Loom Video Linki Buraya Gelecek]
+* **Demo Video:** [ Video Linki](https://youtu.be/gdnuV2_zbME?si=uZn21gYN0cd2Eiam)
 
 ## 🛠️ Kullanılan Teknolojiler & Araçlar
 * **Yapay Zeka Core:** Google Gemini 1.5-Flash (NLP & Triyaj)
